@@ -14,4 +14,8 @@ mongoose
 	.then(() => console.log("mongoDB connected"))
 	.catch(err => console.error(err));
 
+app.use(express.json());
+
+app.use("/user", require("./routes/user"));
+
 app.listen(5000, () => console.log("server started"));
