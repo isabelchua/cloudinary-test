@@ -1,0 +1,22 @@
+{
+  "name": "cloudinary-mongo-CRUD",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "cloudinary": "^1.23.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.10.9",
+    "multer": "^1.4.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.5"
+  },
+  "scripts": {
+    "server": "nodemon index"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
