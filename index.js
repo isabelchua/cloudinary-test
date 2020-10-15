@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
 
+app.use(express.json({ limit: "5mb" }));
+app.use(express.urlencoded({ limit: "5mb", extended: true }));
+
 //connect db
 mongoose
 	.connect(process.env.MONGO_URI, {

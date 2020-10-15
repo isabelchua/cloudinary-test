@@ -2,19 +2,34 @@ const router = require("express").Router();
 const cloudinary = require("../utils/cloudinary");
 const upload = require("../utils/multer");
 const User = require("../model/user");
+// const { formatCloudinaryUrl } = require("../utils/controllerUtils");
 
 router.post("/", upload.single("image"), async (req, res) => {
 	try {
-		const fileStr = req.body.data;
+		// Upload image to cloudinary
+		const fileStr = req.file.path;
+
+		//const result = await cloudinary.uploader.upload(req.file.path);
 		const result = await cloudinary.uploader.upload(fileStr, {
 			upload_preset: "reviews"
 		});
 
+		// const thumbnailUrl = formatCloudinaryUrl(
+		// 	result.secure_url,
+		// 	{
+		// 		width: 250,
+		// 		height: 150
+		// 	},
+		// 	true
+		// );
+
+		// Create new user
 		let user = new User({
 			name: req.body.name,
 			avatar: result.secure_url,
 			cloudinary_id: result.public_id
 		});
+		// Save user
 		await user.save();
 		res.json(user);
 	} catch (err) {
@@ -33,10 +48,11 @@ router.get("/", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
 	try {
+		// Find user by id
 		let user = await User.findById(req.params.id);
-		// delete from cloudinary
+		// Delete image from cloudinary
 		await cloudinary.uploader.destroy(user.cloudinary_id);
-		//delete from db
+		// Delete user from db
 		await user.remove();
 		res.json(user);
 	} catch (err) {
@@ -47,16 +63,15 @@ router.delete("/:id", async (req, res) => {
 router.put("/:id", upload.single("image"), async (req, res) => {
 	try {
 		let user = await User.findById(req.params.id);
-
+		// Delete image from cloudinary
 		await cloudinary.uploader.destroy(user.cloudinary_id);
-
+		// Upload image to cloudinary
 		const result = await cloudinary.uploader.upload(req.file.path);
 		const data = {
 			name: req.body.name || user.name,
 			avatar: result.secure_url || user.avatar,
 			cloudinary_id: result.public_id || user.cloudinary_id
 		};
-
 		user = await User.findByIdAndUpdate(req.params.id, data, { new: true });
 		res.json(user);
 	} catch (err) {
