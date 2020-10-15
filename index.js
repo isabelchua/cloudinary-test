@@ -9,7 +9,8 @@ mongoose
 	.connect(process.env.MONGO_URI, {
 		useCreateIndex: true,
 		useUnifiedTopology: true,
-		useNewUrlParser: true
+		useNewUrlParser: true,
+		useFindAndModify: false
 	})
 	.then(() => console.log("mongoDB connected"))
 	.catch(err => console.error(err));
@@ -18,4 +19,4 @@ app.use(express.json());
 
 app.use("/user", require("./routes/user"));
 
-app.listen(5000, () => console.log("server started"));
+app.listen(5002, () => console.log("server started"));
